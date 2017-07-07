@@ -6,18 +6,15 @@
 #
 
 library(shiny)
+library(dplyr)
 
 shinyServer(function(input, output) {
-
-  output$distPlot <- renderPlot({
-
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2]
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
-
+  tbl_dat <- dplyr::starwars
+  tbl_dat <- tbl_dat %>%
+    select(name:species)
+  
+  output$starwars_tbl <- DT::renderDataTable({
+    DT::datatable(tbl_dat, filter = "top")
   })
 
 })
